@@ -7,7 +7,8 @@ public class GameManager : SingletonBase<GameManager>
     // Start is called before the first frame update
     void Start()
     {
-        
+        Console.Initialize();
+        Console.Open = false;
     }
 
     // Update is called once per frame
