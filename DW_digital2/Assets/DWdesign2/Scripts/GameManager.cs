@@ -1,19 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Popcron.Console;
 
 public class GameManager : SingletonBase<GameManager>
 {
-    // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
-        Console.Initialize();
-        Console.Open = false;
+        Parser.Register(this, "gm");
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnDisable()
     {
-        
+        Parser.Unregister(this);
+    }
+
+    void Start()
+    {
+        Console.Open = false;
     }
 }
