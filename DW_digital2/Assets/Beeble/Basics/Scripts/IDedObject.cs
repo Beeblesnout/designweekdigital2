@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public abstract class IDedObject<T> : MonoBehaviour where T : MonoBehaviour
 {
     /// <summary>
-    /// Private storage for ID.
+    /// Private storage for the ID.
     /// </summary>
     [SerializeField]
     [Tooltip("Unique ID for this object. <RMB for tools>")]
-    [ContextMenuItem("Validate This ID", "ValidateIDWithRefresh")]
+    [ContextMenuItem("Validate This ID", "ValidateID")]
     [ContextMenuItem("Assign Next Available ID", "ReassignID")]
     private byte p_ID;
 
@@ -21,11 +19,12 @@ public abstract class IDedObject<T> : MonoBehaviour where T : MonoBehaviour
     public byte ID { get => p_ID; }
 
     /// <summary>
-    /// Reassigns the object's ID to the next available ID.
+    /// Reassigns the object's ID to the first available ID.
     /// </summary>
-    /// <returns>Returns the previous ID.</returns>
-    protected void ReassignID()
+    /// <returns>The previous ID.</returns>
+    protected byte ReassignID()
     {
+        byte prevID = p_ID;
         if (allIDs.Count == 0) 
         {
             p_ID = 0;
@@ -37,36 +36,35 @@ public abstract class IDedObject<T> : MonoBehaviour where T : MonoBehaviour
                 if (!allIDs.Contains(i))
                 {
                     p_ID = i;
-                    return;
+                    break;
                 }
             }
-            Debug.LogError("[IDReassignment] There are no more available IDs to be assigned, code might perform in weird ways past this point.", this);
+            Console.Warn("[IDReassignment] There are no more available IDs to be assigned, trying to reach IDed objects might return the wrong objects you were intending.");
         }
+        return prevID;
     }
 
-    public void ValidateID()
+    /// <summary>
+    /// Checks if the ID has already been used. Reassign a new one if it has.
+    /// </summary>
+    /// <returns>The new ID if needed to be reassigned.</returns>
+    public byte ValidateID()
     {
         if (allIDs.Contains(p_ID))
         {
-            byte prevID = p_ID;
-            ReassignID();
-            Debug.Log("[IDReassignment] An object already exists with the ID of " + prevID + ", this object's ID has been automatically reassigned to " + p_ID, this);
+            byte prevID = ReassignID();
+            Console.Warn("[IDReassignment] An object already exists with the ID of " + prevID + ". " + gameObject.name + "'s ID has been automatically reassigned to " + p_ID);
         }
+        return p_ID;
     }
 
-    public void ValidateIDWithRefresh()
-    {
-        RefreshAllObjects();
-        ValidateID();
-    }
-
-    protected virtual void Awake() {
+    public virtual void Awake() {
         IDedObject<T>.AddObject(this);
         ValidateID();
-        print("IDedObject of type " + typeof(T) + " created.");
+        Console.WriteLine("IDedObject of type " + typeof(T) + " created with the ID: " + p_ID);
     }
 
-    protected virtual void OnDestroy()
+    public virtual void OnDestroy()
     {
         IDedObject<T>.RemoveObject(this);
     }
@@ -77,7 +75,7 @@ public abstract class IDedObject<T> : MonoBehaviour where T : MonoBehaviour
     private static List<byte> allIDs = new List<byte>();
 
     /// <summary>
-    /// Adds the new object to a list and checks the legality of it's ID.
+    /// [Static] Adds the new object to a list and checks the legality of it's ID.
     /// </summary>
     /// <param name="newObject">The object to add.</param>
     public static void AddObject(IDedObject<T> newObject)
@@ -87,7 +85,7 @@ public abstract class IDedObject<T> : MonoBehaviour where T : MonoBehaviour
     }
 
     /// <summary>
-    /// Remove an object from the object and ID lists.
+    /// [Static] Remove an object from the object and ID lists.
     /// </summary>
     /// <param name="deletingObject">The object to remove.</param>
     public static void RemoveObject(IDedObject<T> deletingObject)
@@ -97,7 +95,7 @@ public abstract class IDedObject<T> : MonoBehaviour where T : MonoBehaviour
     }
 
     /// <summary>
-    /// Refreshes all allObjects list.
+    /// [Static] Refreshes all allObjects list.
     /// </summary>
     public static void RefreshAllObjects() {
         allObjects = ((IDedObject<T>[])FindObjectsOfType(typeof(IDedObject<T>))).ToList();
@@ -105,20 +103,20 @@ public abstract class IDedObject<T> : MonoBehaviour where T : MonoBehaviour
     }
 
     /// <summary>
-    /// Searches for an object with an equal ID to givenID.
+    /// [Static] Searches for an object with an equal ID to givenID.
     /// </summary>
     /// <param name="givenID">ID to search for.</param>
     /// <returns>Returns the found object with ID equal to givenID. Returns a default value of T if no object of givenID exists.</returns>
     public static IDedObject<T> GetObject(byte givenID)
     {
-        if (foundObject?.ID == givenID) return foundObject;
-        // RefreshAllObjects();
-        foundObject = allObjects.Find(obj => obj.ID == givenID);
-        if (foundObject == default(IDedObject<T>))
-            Debug.Log("[ObjectIDSearch|Type:" + typeof(T) + "] No object of the type '" + typeof(T) + "' exists with the ID of " + givenID.ToString() + ". (Returning default value for " + typeof(T) + ")");
-        return foundObject;
+        if (savedObject) 
+            if (savedObject.ID == givenID) 
+                return savedObject;
+        savedObject = allObjects.Find(obj => obj.ID == givenID);
+        if (savedObject == default(IDedObject<T>)) Console.Warn("[ObjectIDSearch|Type:" + typeof(T) + "] No object of the type '" + typeof(T) + "' exists with the ID of " + givenID.ToString() + ". (Returning default value for " + typeof(T) + ")");
+        return savedObject;
     }
-    private static IDedObject<T> foundObject;
+    private static IDedObject<T> savedObject;
 
     #endregion
 }
