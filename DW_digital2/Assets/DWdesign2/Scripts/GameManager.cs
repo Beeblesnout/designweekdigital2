@@ -5,15 +5,16 @@ using Popcron.Console;
 
 public class GameManager : SingletonBase<GameManager>
 {
-    void OnEnable()
-    {
-        Parser.Register(this, "gm");
-    }
 
-    void OnDisable()
-    {
-        Parser.Unregister(this);
-    }
+
+    // public override void Awake()
+    // {
+    //     base.Awake();
+        
+    // }
+
+    void OnEnable() { Parser.Register(this, "gm"); }
+    void OnDisable() { Parser.Unregister(this); }
 
     void Start()
     {
