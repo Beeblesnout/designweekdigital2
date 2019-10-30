@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class knockback : MonoBehaviour
 {
+    public ResourceEnergy resourceEnergyScript;
+
     [SerializeField] private float knockbackStrength;
 
     public GameObject knockbackObj;
@@ -15,7 +17,7 @@ public class knockback : MonoBehaviour
     private void Update()
     {
         knockbackObj.transform.position = end.transform.position;
-        if (Input.GetKey(KeyCode.Q))
+        if (Input.GetKey(KeyCode.Q) && resourceEnergyScript.currentHealth >= 1f)
         {
             PushForward();
         }
