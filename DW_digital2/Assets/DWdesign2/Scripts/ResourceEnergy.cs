@@ -26,7 +26,7 @@ public class ResourceEnergy : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Q) && currentHealth >= 0)
         {
-            DealDamage(10);
+            DealDamage(25);
         }
         if (currentHealth > maxPlayerHealth)
         {
