@@ -64,7 +64,6 @@ public class Rider : MonoBehaviour
         smoothAimAngle += Mathf.Min(shieldRotateSpeed, Mathf.Abs(deltaAngle)) * Mathf.Sign(deltaAngle);
         shieldPivot.rotation = Quaternion.AngleAxis(smoothAimAngle - 90, Vector3.up);
         timeCount += Time.deltaTime * shieldRotateSpeed;
-
     }
 
     void FixedUpdate()
