@@ -17,7 +17,11 @@ public class knockback : MonoBehaviour
     private void Update()
     {
         knockbackObj.transform.position = end.transform.position;
-        if (Input.GetKey(KeyCode.Q) && resourceEnergyScript.currentHealth >= 1f)
+    }
+
+    public void DoKnockback()
+    {
+        if (resourceEnergyScript.currentHealth >= 1f)
         {
             PushForward();
         }
@@ -42,7 +46,6 @@ public class knockback : MonoBehaviour
 
     public void PushForward()
     {
-        Debug.Log("f");
         knockbackObj.transform.position = Vector3.MoveTowards(start.transform.position, end.transform.position, Time.deltaTime * force);
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class ResourceEnergy : MonoBehaviour
 {
-    public Image healthBarSlider;
+    public Slider healthBarSlider;
 
     public float currentHealth;
     public float maxPlayerHealth;
@@ -43,7 +43,7 @@ public class ResourceEnergy : MonoBehaviour
 
     private void UpdateHpbar()
     {
-        healthBarSlider.fillAmount = currentHealth / maxPlayerHealth;
+        healthBarSlider.value = currentHealth / maxPlayerHealth;
     }
 
     public void RegenHealth()

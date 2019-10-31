@@ -1,0 +1,52 @@
+{
+    "name": "RiderControls",
+    "maps": [
+        {
+            "name": "Rider",
+            "id": "a843d7f5-120a-44f6-b706-d24cd1f2b20d",
+            "actions": [
+                {
+                    "name": "Aim",
+                    "type": "Value",
+                    "id": "ce6bafc0-f7dd-4d9e-9be2-ddbc25714c5c",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Knockback",
+                    "type": "Button",
+                    "id": "162b4626-ac17-424b-a0cf-cbe80b3181c8",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "f02f036d-1c9b-4fe6-ad95-b0f902a0cd0d",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "InvertVector2(invertY=false),StickDeadzone(min=0.1,max=1)",
+                    "groups": "",
+                    "action": "Aim",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3059ac2d-1482-418a-9868-08df2d6f2a64",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Knockback",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

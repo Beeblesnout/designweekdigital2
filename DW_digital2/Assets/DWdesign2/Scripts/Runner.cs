@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using Popcron.Console;
 using Beeble;
+using UnityEngine.InputSystem;
 
 public class Runner : MonoBehaviour
 {
@@ -11,7 +12,8 @@ public class Runner : MonoBehaviour
 
         #region TEAM
             public int teamID;
-            public TeamPlayer teamPlayer;
+            public Team teamPlayer;
+            public Transform riderLoc;
         #endregion
 
         #region MOVEMENT
@@ -53,36 +55,36 @@ public class Runner : MonoBehaviour
 
         #region CONTROLS
             [Header("Controls")]
-            /// <summary>
-            /// The index of this player's controller.
-            /// </summary>
-            public int cIndex;
-            public Vector3 input;
+            public PlayerInput input;
+            public Vector3 inputVect;
 
             // Jump
-            bool queueJump;
-            public UnityEvent OnJump;
+            public bool canJump;
+            public bool queueJump;
+            public UnityEvent OnJumpStart;
 
             // Dash
-            bool queueDash;
+            public bool canDash;
+            public bool queueDash;
             public UnityEvent OnDashStart;
             public UnityEvent OnDashEnd;
         #endregion
 
     #endregion
 
-    void Awake()
-    {
+    // void Awake()
+    // {
         
-    }
+    // }
     
     void OnEnable() { Parser.Register(this, "runner" + teamID); }
     void OnDisable() { Parser.Unregister(this); }
 
     void Start()
     {
-        teamPlayer = GetComponent<TeamPlayer>();
+        teamPlayer = GetComponent<Team>();
         rb = GetComponent<Rigidbody>();
+        input = GetComponent<PlayerInput>();
 
         accel = defaultAccel;
         maxSpeed = defaultMaxSpeed;
@@ -90,17 +92,19 @@ public class Runner : MonoBehaviour
         jumpCDTimer = new Timer(jumpCDDuration);
         dashTimer = new Timer(dashDuration);
         dashCDTimer = new Timer(dashCDDuration);
+        dashTimer.Start();
+
+        // attach controls to actions
+
     }
+
+    // Input Actions
+    public void OnMove(InputValue value) { inputVect = new Vector3(value.Get<Vector2>().x, 0, value.Get<Vector2>().y); }
+    public void OnJump() { queueJump ^= grounded; }
+    public void OnDash() { queueDash ^= !dashing; }
 
     void Update()
     {
-        // idk why i have to flip vertical input
-        input = new Vector3(Input.GetAxis("Horizontal" + cIndex), 0, -Input.GetAxis("Vertical" + cIndex));
-
-        // TODO: these dont work at all
-        if (grounded) queueJump ^= Input.GetButtonDown("ActionA" + cIndex);
-        if (!dashing && !dashCDTimer.Completed) queueDash ^= Input.GetButtonDown("ActionB" + cIndex);
-
         jumpCDTimer.duration = jumpCDDuration;
         dashTimer.duration = dashDuration;
         dashCDTimer.duration = dashCDDuration;
@@ -109,14 +113,14 @@ public class Runner : MonoBehaviour
     void FixedUpdate()
     {
         // Ground Check
-        grounded = Physics.Raycast(transform.position, Vector3.down, .1f, LayerMask.GetMask("Ground"));
+        grounded = Physics.Raycast(transform.position, Vector3.down, .2f, LayerMask.GetMask("Ground"));
 
         // Jump
         if (queueJump)
         {
             queueJump = false;
             rb.AddForce(Vector3.up * jumpStrength, ForceMode.Impulse);
-            OnJump.Invoke();
+            OnJumpStart.Invoke();
         }
 
         // Dash
@@ -152,10 +156,10 @@ public class Runner : MonoBehaviour
 
         // Movement
         float overspeed = Mathf.Max(0, rb.velocity.magnitude - maxSpeed);
-        if (input.magnitude > .1f)
+        if (inputVect.magnitude > .1f)
         {
             // rb.AddForce(input * accel, ForceMode.Acceleration);
-            rb.velocity += input * accel;
+            rb.velocity += inputVect * accel;
             // print(rb.velocity);
 
             if (rb.velocity.magnitude > maxSpeed)
