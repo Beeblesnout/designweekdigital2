@@ -7,14 +7,10 @@ public class DamagePlayer : MonoBehaviour
 {
     public Image healthBarSlider;
 
+    public Transform playerSpawn;
+
     public float currentHealth;
     public float maxPlayerHealth;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void Update()
@@ -29,6 +25,12 @@ public class DamagePlayer : MonoBehaviour
             Debug.Log("th");
             DealDamage(25);
         }
+
+        if (currentHealth <= 0)
+        {
+            transform.position = playerSpawn.position;
+            currentHealth = maxPlayerHealth;
+        }
     }
 
     public void DealDamage(float damage)
@@ -42,4 +44,6 @@ public class DamagePlayer : MonoBehaviour
         //healthBarSlider.value = CalculateHealth();
         healthBarSlider.fillAmount = currentHealth / maxPlayerHealth;
     }
+
+    
 }
