@@ -13,6 +13,11 @@ public class Rider : MonoBehaviour
         public Team teamPlayer;
         public Rigidbody rb;
         public bool enableCollisions;
+        public Transform knockbackPivot;
+        public Transform shieldPivot;
+        public float shieldRotateSpeed;
+        float timeCount = 0;
+        public Transform shield;
 
         #region ABILITIES
             [Header("Abilities")]
@@ -25,6 +30,7 @@ public class Rider : MonoBehaviour
             [Header("Controls")]
             public PlayerInput input;
             public float aimAngle;
+            float smoothAimAngle;
          
             public bool queueKnockback;
         #endregion
@@ -53,7 +59,12 @@ public class Rider : MonoBehaviour
 
     void Update()
     {
-        transform.rotation = Quaternion.AngleAxis(aimAngle - 90, Vector3.up);
+        knockbackPivot.rotation = Quaternion.AngleAxis(aimAngle - 90, Vector3.up);
+        var deltaAngle = aimAngle - smoothAimAngle;
+        smoothAimAngle += Mathf.Min(shieldRotateSpeed, Mathf.Abs(deltaAngle)) * Mathf.Sign(deltaAngle);
+        shieldPivot.rotation = Quaternion.AngleAxis(smoothAimAngle - 90, Vector3.up);
+        timeCount += Time.deltaTime * shieldRotateSpeed;
+
     }
 
     void FixedUpdate()

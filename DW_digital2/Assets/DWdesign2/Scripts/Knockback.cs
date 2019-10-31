@@ -20,7 +20,7 @@ public class Knockback : MonoBehaviour
             if (rb)
             {
                 print("boop");
-                rb.AddExplosionForce(force, forceOrigin.position, 5);
+                rb.AddForce(transform.forward * force, ForceMode.Impulse);
             }
         }
         particle.Play();
@@ -30,6 +30,6 @@ public class Knockback : MonoBehaviour
     void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(forceBox.position, forceBox.localScale * 2);
+        //Gizmos.DrawWireCube(forceBox.position, forceBox.localScale * 2);
     }
 }

@@ -18,7 +18,7 @@ public class CameraFollow : MonoBehaviour
     }
 
     void Update () {
-        transform.parent.position = target.position + Vector3.up;
+        //transform.parent.position = target.position + Vector3.up;
     }
 
 }
