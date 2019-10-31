@@ -17,10 +17,10 @@ public class Rider : MonoBehaviour
         public Transform knockbackPivot;
         public Transform shieldPivot;
         public float shieldRotateSpeed;
-        float timeCount = 0;
-        public Transform shield;
 
-        #region ABILITIES
+    public float timeCount;
+
+    #region ABILITIES
             [Header("Abilities")]
             [Command("kb_str")]
             public float knockbackStrength;
@@ -74,7 +74,7 @@ public class Rider : MonoBehaviour
         // Rotation
         knockbackPivot.rotation = Quaternion.AngleAxis(aimAngle - 90, Vector3.up);
         var deltaAngle = aimAngle - smoothAimAngle;
-        smoothAimAngle += Mathf.Min(shieldRotateSpeed, Mathf.Abs(deltaAngle)) * Mathf.Sign(deltaAngle);
+        smoothAimAngle += Mathf.Min(shieldRotateSpeed * Mathf.Sign(deltaAngle), deltaAngle);
         shieldPivot.rotation = Quaternion.AngleAxis(smoothAimAngle - 90, Vector3.up);
         timeCount += Time.deltaTime * shieldRotateSpeed;
 
