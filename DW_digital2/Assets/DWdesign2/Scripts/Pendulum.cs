@@ -4,21 +4,18 @@ using UnityEngine;
 
 public class Pendulum : MonoBehaviour
 {
-    //public float speed;
-    public float length;
-
-
     public float angle = 90.0f;
     public float speed = 1.5f;
     public bool activateR;
     public bool activateL;
     Quaternion qStart, qEnd;
     private float startTime;
+    public Vector3 axis;
 
     void Start()
     {
-        qStart = Quaternion.AngleAxis(angle, Vector3.forward);
-        qEnd = Quaternion.AngleAxis(-angle, Vector3.forward);
+        qStart = Quaternion.AngleAxis(angle, axis.normalized);
+        qEnd = Quaternion.AngleAxis(-angle, axis.normalized);
     }
 
     // Update is called once per frame
