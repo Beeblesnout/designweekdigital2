@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class ResourceEnergy : MonoBehaviour
@@ -11,6 +12,7 @@ public class ResourceEnergy : MonoBehaviour
     public float maxPlayerHealth;
 
     public float regenRate;
+    public UnityEvent OnDamage;
 
     // Start is called before the first frame update
     void Start()
@@ -38,7 +40,7 @@ public class ResourceEnergy : MonoBehaviour
     public void DealDamage(float damage)
     {
         currentHealth -= damage;
-
+        OnDamage.Invoke();
     }
 
     private void UpdateHpbar()

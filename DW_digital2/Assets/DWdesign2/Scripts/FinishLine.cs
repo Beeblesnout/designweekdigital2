@@ -1,15 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class FinishLine : MonoBehaviour
 {
-
-    public GameObject player;
+    public UnityEvent<GameObject> OnFinish;
     public Transform spawn;
 
     private void OnTriggerEnter(Collider other)
     {
-        player.transform.position = spawn.position;
+        if (other.tag == "Player")
+        {
+            other.transform.position = spawn.position;
+            OnFinish.Invoke(other.gameObject);
+        }
     }
 }
