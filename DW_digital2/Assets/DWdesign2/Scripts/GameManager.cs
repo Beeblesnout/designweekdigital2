@@ -5,6 +5,7 @@ using Popcron.Console;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Users;
 using System.Linq;
+using UnityEngine.Events;
 
 public class GameManager : SingletonBase<GameManager>
 {
@@ -12,8 +13,10 @@ public class GameManager : SingletonBase<GameManager>
     public Team team1;
     public Team team2;
 
-    public GameObject newPlayerScreen;
     public GameObject cameraPrefab;
+    public Transform winScreen;
+
+    public UnityEvent OnWin;
 
     void OnEnable() { Parser.Register(this, "gm"); }
     void OnDisable() { Parser.Unregister(this); }
@@ -21,20 +24,6 @@ public class GameManager : SingletonBase<GameManager>
     void Start()
     {
         Console.Open = false;
-    } 
-
-    [Command("addplayer")]
-    public void AddPlayer()
-    {
-        if (playerCount == 4)
-        {
-            Console.Warn("Player count at maximum (4).");
-            return;
-        }
-        else
-        {
-            newPlayerScreen.SetActive(true);
-        }
     }
     
     public void SetTeam(PlayerInput player, int teamID, int roleID)
@@ -60,5 +49,16 @@ public class GameManager : SingletonBase<GameManager>
             message += "\t" + i + ": " + Gamepad.all[i].displayName + "\n";
         }
         Console.print(message);
+    }
+
+    public void Win(int team)
+    {
+        winScreen.gameObject.SetActive(true);
+    }
+
+    [Command("Quit")]
+    public static void Quit()
+    {
+
     }
 }

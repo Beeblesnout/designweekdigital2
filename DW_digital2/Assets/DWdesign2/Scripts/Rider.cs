@@ -47,8 +47,8 @@ public class Rider : MonoBehaviour
 
     void Start()
     {
-        team = GetComponent<Team>();
         rb = GetComponent<Rigidbody>();
+        rb.isKinematic = true;
         rb.detectCollisions = enableCollisions;
 
         knockbackCD = new Timer(knockbackCDDur);
@@ -86,7 +86,10 @@ public class Rider : MonoBehaviour
     public void PopOff()
     {
         transform.SetParent(null);
-        rb.AddForce(Vector3.up + new Vector3(Random.value, 0, Random.value), ForceMode.Impulse);
+        transform.position += Vector3.up * 2;
+        rb.isKinematic = false;
+        rb.detectCollisions = true;
+        rb.AddForce((Vector3.up * .25f) + new Vector3(Random.value, 0, Random.value), ForceMode.Impulse);
     }
 
     public void PickedUp()
@@ -94,10 +97,6 @@ public class Rider : MonoBehaviour
         transform.SetParent(team.runner.transform.GetChild(1));
         transform.localPosition = Vector3.zero;
         rb.detectCollisions = false;
-    }
-
-    public void EnableCollisions()
-    {
-        rb.detectCollisions = true;
+        rb.isKinematic = true;
     }
 }

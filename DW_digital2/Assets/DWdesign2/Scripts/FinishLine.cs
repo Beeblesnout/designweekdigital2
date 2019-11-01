@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 public class FinishLine : MonoBehaviour
 {
-    public UnityEvent<GameObject> OnFinish;
+    public UnityEvent OnFinish;
     public Transform spawn;
 
     private void OnTriggerEnter(Collider other)
@@ -13,7 +13,7 @@ public class FinishLine : MonoBehaviour
         if (other.tag == "Player")
         {
             other.transform.position = spawn.position;
-            OnFinish.Invoke(other.gameObject);
+            GameManager.Instance.Win(other.name.Contains("Team1") ? 1 : 2);
         }
     }
 }

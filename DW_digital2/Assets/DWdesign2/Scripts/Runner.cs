@@ -12,7 +12,7 @@ public class Runner : MonoBehaviour
 
         #region TEAM
             public int teamID;
-            public Team teamPlayer;
+            public Team team;
             public Transform riderLoc;
         #endregion
 
@@ -51,6 +51,7 @@ public class Runner : MonoBehaviour
 
             // Component References
             Rigidbody rb;
+            public Collider shieldCollider;
         #endregion
 
         #region CONTROLS
@@ -83,7 +84,6 @@ public class Runner : MonoBehaviour
 
     void Start()
     {
-        teamPlayer = GetComponent<Team>();
         rb = GetComponent<Rigidbody>();
 
         accel = defaultAccel;
@@ -192,6 +192,17 @@ public class Runner : MonoBehaviour
 
     void OnCollisionEnter(Collision other) 
     {
-        
+        if (other.gameObject.tag == "Player")
+        {
+            Rider rider = other.gameObject.GetComponent<Rider>();
+            if (rider && rider.teamID == teamID)
+            {
+                rider.PickedUp();
+            }
+        }
+        else if (other.gameObject.tag == "Bullet")
+        {
+            Destroy(other.gameObject);
+        }
     }
 }
