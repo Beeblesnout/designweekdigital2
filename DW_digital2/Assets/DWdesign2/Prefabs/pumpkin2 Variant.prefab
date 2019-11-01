@@ -42,21 +42,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: pumpkin2 Variant
       objectReference: {fileID: 0}
-    - target: {fileID: -9209653804750025370, guid: 90829f2fa8a3e421394fec44c854d97e,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 2df641199c70bc74abc6b4ecc0cf0498, type: 2}
-    - target: {fileID: -5565221451970168517, guid: 90829f2fa8a3e421394fec44c854d97e,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 7c09194da0dd34ccba49ce764ebe51c4, type: 2}
-    - target: {fileID: -4533463703523332508, guid: 90829f2fa8a3e421394fec44c854d97e,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 2df641199c70bc74abc6b4ecc0cf0498, type: 2}
     - target: {fileID: -4216859302048453862, guid: 90829f2fa8a3e421394fec44c854d97e,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -112,6 +97,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -4533463703523332508, guid: 90829f2fa8a3e421394fec44c854d97e,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: dc43af675b81add4b95c4fa895a8b11e, type: 2}
+    - target: {fileID: -9209653804750025370, guid: 90829f2fa8a3e421394fec44c854d97e,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 2df641199c70bc74abc6b4ecc0cf0498, type: 2}
+    - target: {fileID: -5565221451970168517, guid: 90829f2fa8a3e421394fec44c854d97e,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 7c09194da0dd34ccba49ce764ebe51c4, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 90829f2fa8a3e421394fec44c854d97e, type: 3}
 --- !u!1 &3971441261705112933 stripped

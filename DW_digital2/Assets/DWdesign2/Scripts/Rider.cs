@@ -60,12 +60,14 @@ public class Rider : MonoBehaviour
 
     void Update()
     {
-        var input = Gamepad.all[cIndex].leftStick.ReadValue();
+        // var input = Gamepad.all[cIndex].leftStick.ReadValue();
+        var input = Gamepad.all[cIndex].rightStick.ReadValue();
         if (input.magnitude > .1) aimAngle = Mathf.Atan2(input.y, -input.x) * Mathf.Rad2Deg;
 
         bool kB = false;
-        if (Gamepad.all[cIndex].buttonSouth.ReadValue() > 0) kB = true;
-        if (usingKeyboard && Keyboard.current.kKey.ReadValue() > 0) kB = true;
+        // if (Gamepad.all[cIndex].buttonSouth.ReadValue() > 0) kB = true;
+        if (Gamepad.all[cIndex].rightShoulder.ReadValue() > 0) kB = true;
+        // if (usingKeyboard && Keyboard.current.kKey.ReadValue() > 0) kB = true;
         if (kB && knockbackCD.Completed) 
         {
             knockbackCD.Start();
@@ -94,7 +96,7 @@ public class Rider : MonoBehaviour
 
     public void PickedUp()
     {
-        transform.SetParent(team.runner.transform.GetChild(1));
+        transform.SetParent(team.runner.transform.GetChild(2));
         transform.localPosition = Vector3.zero;
         rb.detectCollisions = false;
         rb.isKinematic = true;

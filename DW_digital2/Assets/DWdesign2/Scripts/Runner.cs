@@ -107,8 +107,8 @@ public class Runner : MonoBehaviour
         inputVect = new Vector3(i.x, 0, i.y);
 
         bool jmp = false;
-        if (Gamepad.all[cIndex].buttonSouth.ReadValue() > 0) jmp = true;
-        if (usingKeyboard && Keyboard.current.spaceKey.ReadValue() > 0) jmp = true;
+        if (Gamepad.all[cIndex].leftTrigger.ReadValue() > 0) jmp = true;
+        // if (usingKeyboard && Keyboard.current.spaceKey.ReadValue() > 0) jmp = true;
         if (jmp && grounded && jumpCDTimer.Completed)
         {
             queueJump ^= true;
@@ -116,7 +116,7 @@ public class Runner : MonoBehaviour
 
         bool dsh = false;
         if (Gamepad.all[cIndex].leftShoulder.ReadValue() > 0) dsh = true;
-        if (usingKeyboard && Keyboard.current.leftShiftKey.ReadValue() > 0) dsh = true;
+        // if (usingKeyboard && Keyboard.current.leftShiftKey.ReadValue() > 0) dsh = true;
         if (dsh && !dashing && dashCDTimer.Completed)
         {
             queueDash ^= true;
