@@ -8,6 +8,7 @@ public class Turret : MonoBehaviour
     public float rotateRange;
     public float rotateSpeed;
     public Transform headPivot;
+    float defaultRot;
 
     //bullets
     public Transform bulletSpawner;
@@ -19,11 +20,12 @@ public class Turret : MonoBehaviour
     private void Start()
     {
         InvokeRepeating("ShootBullets", 0f, fireRate);
+        defaultRot = headPivot.rotation.eulerAngles.y;
     }
 
     void Update()
     {
-        headPivot.rotation = Quaternion.AngleAxis(Mathf.Sin(Time.time * rotateSpeed) * rotateRange, Vector3.up);
+        headPivot.rotation = Quaternion.AngleAxis(defaultRot + Mathf.Sin(Time.time * rotateSpeed) * rotateRange, Vector3.up);
     }
 
     void ShootBullets()
