@@ -93,9 +93,6 @@ public class Runner : MonoBehaviour
         dashTimer = new Timer(dashDuration);
         dashCDTimer = new Timer(dashCDDuration);
         dashTimer.Start();
-
-        // attach controls to actions
-
     }
 
     // Input Actions
@@ -112,7 +109,7 @@ public class Runner : MonoBehaviour
         bool jmp = false;
         if (Gamepad.all[cIndex].buttonSouth.ReadValue() > 0) jmp = true;
         if (usingKeyboard && Keyboard.current.spaceKey.ReadValue() > 0) jmp = true;
-        if (jmp && grounded && jumpCDTimer.Completed) //TODO: Add in a cooldown timer here
+        if (jmp && grounded && jumpCDTimer.Completed)
         {
             queueJump ^= true;
         }
@@ -120,7 +117,7 @@ public class Runner : MonoBehaviour
         bool dsh = false;
         if (Gamepad.all[cIndex].leftShoulder.ReadValue() > 0) dsh = true;
         if (usingKeyboard && Keyboard.current.leftShiftKey.ReadValue() > 0) dsh = true;
-        if (dsh && !dashing && dashCDTimer.Completed) //TODO: Add in a cooldown timer here
+        if (dsh && !dashing && dashCDTimer.Completed)
         {
             queueDash ^= true;
         }
@@ -191,5 +188,10 @@ public class Runner : MonoBehaviour
         {
             rb.velocity = Vector3.LerpUnclamped(new Vector3(0, rb.velocity.y, 0), rb.velocity, 1-maxDeccelRate*2);
         }
+    }
+
+    void OnCollisionEnter(Collision other) 
+    {
+        
     }
 }

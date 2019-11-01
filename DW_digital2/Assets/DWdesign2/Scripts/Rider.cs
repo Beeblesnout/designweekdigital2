@@ -87,13 +87,17 @@ public class Rider : MonoBehaviour
     {
         transform.SetParent(null);
         rb.AddForce(Vector3.up + new Vector3(Random.value, 0, Random.value), ForceMode.Impulse);
-        rb.detectCollisions = true;
     }
 
     public void PickedUp()
     {
-        rb.detectCollisions = false;
         transform.SetParent(team.runner.transform.GetChild(1));
         transform.localPosition = Vector3.zero;
+        rb.detectCollisions = false;
+    }
+
+    public void EnableCollisions()
+    {
+        rb.detectCollisions = true;
     }
 }
