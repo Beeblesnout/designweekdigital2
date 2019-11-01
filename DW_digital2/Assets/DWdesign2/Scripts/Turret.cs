@@ -5,7 +5,9 @@ using UnityEngine;
 public class Turret : MonoBehaviour
 {
     //turret
+    public float rotateRange;
     public float rotateSpeed;
+    public Transform headPivot;
 
     //bullets
     public Transform bulletSpawner;
@@ -19,23 +21,14 @@ public class Turret : MonoBehaviour
         InvokeRepeating("ShootBullets", 0f, fireRate);
     }
 
-    //Update is called once per frame
     void Update()
     {
-        //RotatePosition();
-    }
-
-    void RotatePosition()
-    {
-        transform.Rotate(Vector3.down * rotateSpeed * Time.deltaTime);
+        headPivot.rotation = Quaternion.AngleAxis(Mathf.Sin(Time.time * rotateSpeed) * rotateRange, Vector3.up);
     }
 
     void ShootBullets()
     {
-        GameObject bullet;
-        bullet = Instantiate(bulletPrefab, bulletSpawner.position, Quaternion.identity) as GameObject;
-
-        bullet.GetComponent<Rigidbody>().AddForce(bulletSpawner.right * bulletForce, ForceMode.Impulse);
+        Instantiate(bulletPrefab, bulletSpawner.position, bulletSpawner.rotation);
     }
 
 }

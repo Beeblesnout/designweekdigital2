@@ -34,6 +34,7 @@ public class Rider : MonoBehaviour
             public int cIndex;
             public bool usingKeyboard;
             public float aimAngle;
+            float prevAngle;
             float smoothAimAngle;
         
             public bool queueKnockback;
@@ -50,7 +51,7 @@ public class Rider : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         rb.detectCollisions = enableCollisions;
 
-        knockbackCD = new Timer();
+        knockbackCD = new Timer(knockbackCDDur);
     }
 
     // Input Actions
@@ -60,7 +61,7 @@ public class Rider : MonoBehaviour
     void Update()
     {
         var input = Gamepad.all[cIndex].leftStick.ReadValue();
-        aimAngle = Mathf.Atan2(input.y, -input.x) * Mathf.Rad2Deg;
+        if (input.magnitude > .1) aimAngle = Mathf.Atan2(input.y, -input.x) * Mathf.Rad2Deg;
 
         bool kB = false;
         if (Gamepad.all[cIndex].buttonSouth.ReadValue() > 0) kB = true;
@@ -70,28 +71,29 @@ public class Rider : MonoBehaviour
             knockbackCD.Start();
             DoKnockback.Invoke();
         }
-
-        // Rotation
-        knockbackPivot.rotation = Quaternion.AngleAxis(aimAngle - 90, Vector3.up);
-        var deltaAngle = aimAngle - smoothAimAngle;
-        smoothAimAngle += Mathf.Min(shieldRotateSpeed * Mathf.Sign(deltaAngle), deltaAngle);
-        shieldPivot.rotation = Quaternion.AngleAxis(smoothAimAngle - 90, Vector3.up);
-        timeCount += Time.deltaTime * shieldRotateSpeed;
-
+        knockbackCD.Tick();
     }
 
     void FixedUpdate()
     {
-        
+        // Rotation
+        Quaternion aim = Quaternion.AngleAxis(aimAngle - 90, Vector3.up);
+        knockbackPivot.rotation = aim;
+        shieldPivot.rotation = Quaternion.RotateTowards(shieldPivot.rotation, aim, shieldRotateSpeed);
+        timeCount += Time.deltaTime * shieldRotateSpeed;
     }
 
-    public void Fall()
+    public void PopOff()
     {
+        transform.SetParent(null);
+        rb.AddForce(Vector3.up + new Vector3(Random.value, 0, Random.value), ForceMode.Impulse);
         rb.detectCollisions = true;
     }
 
     public void PickedUp()
     {
         rb.detectCollisions = false;
+        transform.SetParent(team.runner.transform.GetChild(1));
+        transform.localPosition = Vector3.zero;
     }
 }

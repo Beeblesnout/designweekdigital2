@@ -102,10 +102,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3213742192852593882}
-  - component: {fileID: 3213742192852593887}
   - component: {fileID: 3213742192852593881}
   - component: {fileID: 3213742192852593880}
-  - component: {fileID: 3213742192852593884}
   m_Layer: 0
   m_Name: Rider
   m_TagString: Untagged
@@ -130,50 +128,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3213742192852593887
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3213742192852593883}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: c52f6e69a0437e84cb16e88dfefb8c65,
-    type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.InputSystem.PlayerInput+DeviceLostEvent, Unity.InputSystem,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.InputSystem.PlayerInput+DeviceRegainedEvent, Unity.InputSystem,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_ActionEvents:
-  - m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.InputSystem.PlayerInput+ActionEvent, Unity.InputSystem,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-    m_ActionId: ce6bafc0-f7dd-4d9e-9be2-ddbc25714c5c
-    m_ActionName: Rider/Aim[/XInputControllerWindows/leftStick,/XInputControllerWindows/rightStick,/Keyboard/upArrow,/Keyboard/downArrow,/Keyboard/leftArrow,/Keyboard/rightArrow]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.InputSystem.PlayerInput+ActionEvent, Unity.InputSystem,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-    m_ActionId: 162b4626-ac17-424b-a0cf-cbe80b3181c8
-    m_ActionName: Rider/Knockback[/XInputControllerWindows/buttonSouth,/XInputControllerWindows/buttonWest,/Keyboard/numpad0]
-  m_NeverAutoSwitchControlSchemes: 1
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: a843d7f5-120a-44f6-b706-d24cd1f2b20d
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!114 &3213742192852593881
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -187,11 +141,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   teamID: 1
-  teamPlayer: {fileID: 0}
+  team: {fileID: 0}
   rb: {fileID: 3213742192852593880}
   enableCollisions: 0
+  knockbackPivot: {fileID: 6662576498792239772}
+  shieldPivot: {fileID: 4304729323501337254}
+  shieldRotateSpeed: 5
+  timeCount: 0
   knockbackStrength: 5
-  Knockback:
+  knockbackCDDur: 2
+  DoKnockback:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 9150992104674872833}
@@ -201,13 +160,14 @@ MonoBehaviour:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
-          m_FloatArgument: 50
+          m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  input: {fileID: 0}
+  cIndex: 0
+  usingKeyboard: 0
   aimAngle: 0
   queueKnockback: 0
 --- !u!54 &3213742192852593880
@@ -226,22 +186,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
---- !u!114 &3213742192852593884
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3213742192852593883}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9401d956bc56c4f89a925372af92357e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  healthBarSlider: {fileID: 0}
-  currentHealth: 100
-  maxPlayerHealth: 100
-  regenRate: 0.2
 --- !u!1 &6362396703906818306
 GameObject:
   m_ObjectHideFlags: 0
@@ -380,10 +324,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 028414f3e5fb6f848ae219a2a64347d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  force: 100
+  force: 0
+  cost: 0
   forceBox: {fileID: 9150992104246184513}
-  forceOrigin: {fileID: 0}
-  resourceEnergyScript: {fileID: 3213742192852593884}
+  resourceEnergyScript: {fileID: 0}
   particle: {fileID: 9150992104674872895}
 --- !u!198 &9150992104674872895
 ParticleSystem:
@@ -5212,7 +5156,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84d1ab81b5ec94efea39e730d98031dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resourceEnergyScript: {fileID: 3213742192852593884}
+  resourceEnergyScript: {fileID: 0}
 --- !u!54 &9150992105081023626
 Rigidbody:
   m_ObjectHideFlags: 0

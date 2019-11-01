@@ -76,10 +76,10 @@ public class NewPlayerScreen : MonoBehaviour
         GameObject prefab = selectedRole == 1 ? riderPrefab : runnerPrefab;
         try {
             Gamepad gamepad = Gamepad.all[GameManager.playerCount];
-            PlayerInput player = PlayerInput.Instantiate(prefab, GameManager.playerCount, "", selectedTeam-1, gamepad);
+            PlayerInput player = PlayerInput.Instantiate(prefab, GameManager.playerCount-1, "", GameManager.playerCount-1, gamepad);
             CameraFollow cam = Instantiate(GameManager.Instance.cameraPrefab).GetComponent<CameraFollow>();
             player.camera = cam.gameObject.GetComponent<Camera>();
-            cam.target = player.transform;
+            cam.target1 = player.transform;
             GameManager.Instance.SetTeam(player, selectedTeam, selectedRole);
 
             GameManager.playerCount++;

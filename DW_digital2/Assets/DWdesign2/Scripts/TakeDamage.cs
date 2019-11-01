@@ -11,7 +11,6 @@ public class TakeDamage : MonoBehaviour
     {
         if (collision.gameObject.tag == "Bullet" || collision.gameObject.tag == "Hazard")
         {
-            Debug.Log("w");
             resourceEnergyScript.DealDamage(20f);
         }
     }

@@ -55,7 +55,8 @@ public class Runner : MonoBehaviour
 
         #region CONTROLS
             [Header("Controls")]
-            public PlayerInput input;
+            public int cIndex;
+            public bool usingKeyboard;
             public Vector3 inputVect;
 
             // Jump
@@ -84,7 +85,6 @@ public class Runner : MonoBehaviour
     {
         teamPlayer = GetComponent<Team>();
         rb = GetComponent<Rigidbody>();
-        input = GetComponent<PlayerInput>();
 
         accel = defaultAccel;
         maxSpeed = defaultMaxSpeed;
@@ -99,15 +99,39 @@ public class Runner : MonoBehaviour
     }
 
     // Input Actions
-    public void OnMove(InputValue value) { inputVect = new Vector3(value.Get<Vector2>().x, 0, value.Get<Vector2>().y); }
-    public void OnJump() { queueJump ^= grounded; }
-    public void OnDash() { queueDash ^= !dashing; }
+    // public void OnMove(InputValue value) { inputVect = new Vector3(value.Get<Vector2>().x, 0, value.Get<Vector2>().y); }
+    // public void OnJump() { queueJump ^= grounded; }
+    // public void OnDash() { queueDash ^= !dashing; }
 
     void Update()
     {
+        // Input
+        var i = Gamepad.all[cIndex].leftStick.ReadValue();
+        inputVect = new Vector3(i.x, 0, i.y);
+
+        bool jmp = false;
+        if (Gamepad.all[cIndex].buttonSouth.ReadValue() > 0) jmp = true;
+        if (usingKeyboard && Keyboard.current.spaceKey.ReadValue() > 0) jmp = true;
+        if (jmp && grounded && jumpCDTimer.Completed) //TODO: Add in a cooldown timer here
+        {
+            queueJump ^= true;
+        }
+
+        bool dsh = false;
+        if (Gamepad.all[cIndex].leftShoulder.ReadValue() > 0) dsh = true;
+        if (usingKeyboard && Keyboard.current.leftShiftKey.ReadValue() > 0) dsh = true;
+        if (dsh && !dashing && dashCDTimer.Completed) //TODO: Add in a cooldown timer here
+        {
+            queueDash ^= true;
+        }
+
         jumpCDTimer.duration = jumpCDDuration;
         dashTimer.duration = dashDuration;
         dashCDTimer.duration = dashCDDuration;
+
+        jumpCDTimer.Tick();
+        dashCDTimer.Tick();
+        if (dashing) dashTimer.Tick();
     }
 
     void FixedUpdate()
@@ -120,6 +144,7 @@ public class Runner : MonoBehaviour
         {
             queueJump = false;
             rb.AddForce(Vector3.up * jumpStrength, ForceMode.Impulse);
+            jumpCDTimer.Start();
             OnJumpStart.Invoke();
         }
 
@@ -138,7 +163,6 @@ public class Runner : MonoBehaviour
             maxSpeed = defaultMaxSpeed + dashSpeedMod;
             accel = defaultAccel + dashAccelMod;
 
-            dashTimer.Tick();
             if (dashTimer.Completed)
             {
                 dashing = false;
@@ -150,27 +174,21 @@ public class Runner : MonoBehaviour
         {
             maxSpeed = defaultMaxSpeed;
             accel = defaultAccel;
-
-            dashCDTimer.Tick();
         }
 
         // Movement
         float overspeed = Mathf.Max(0, rb.velocity.magnitude - maxSpeed);
         if (inputVect.magnitude > .1f)
         {
-            // rb.AddForce(input * accel, ForceMode.Acceleration);
             rb.velocity += inputVect * accel;
-            // print(rb.velocity);
 
             if (rb.velocity.magnitude > maxSpeed)
             {
-                // rb.velocity = rb.velocity.normalized * Mathf.Min(overspeed, maxDeccelRate);
                 rb.velocity = Vector3.LerpUnclamped(rb.velocity.normalized * maxSpeed, rb.velocity, 1-maxDeccelRate);
             }
         }
         else
         {
-            // rb.velocity = rb.velocity.normalized * Mathf.Min(Mathf.Pow(overspeed, 2), maxDeccelRate * 2);
             rb.velocity = Vector3.LerpUnclamped(new Vector3(0, rb.velocity.y, 0), rb.velocity, 1-maxDeccelRate*2);
         }
     }

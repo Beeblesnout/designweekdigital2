@@ -5,20 +5,15 @@ using UnityEngine;
 public class CameraFollow : MonoBehaviour
 {
     public new Camera camera;
-
-    public Transform target;
-
-    void Awake()
-    {
-        camera = GetComponent<Camera>();
-    }
-
-    void Start() {
-        
-    }
+    [Range(0, 1)]
+    public float blendPos;
+    public Transform target1;
+    public Transform target2;
+    public float maxMoveSpeed;
 
     void Update () {
-        //transform.parent.position = target.position + Vector3.up;
+        Vector3 destination = Vector3.Lerp(target1.position, target2.position, .75f);
+        transform.position = Vector3.Lerp(transform.position, destination, .1f);
     }
 
 }
